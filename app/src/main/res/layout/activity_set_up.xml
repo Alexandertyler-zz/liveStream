@@ -60,6 +60,15 @@
             android:onClick="sendJsonPacket"
             android:id="@+id/jsonDataButton"/>
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:text="Send Location"
+            android:onClick="sendLocation"
+            android:id="@+id/jsonLocationButton"/>
+
         </LinearLayout>
 
 
