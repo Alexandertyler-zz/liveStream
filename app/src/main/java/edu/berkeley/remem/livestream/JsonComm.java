@@ -1,13 +1,16 @@
 package edu.berkeley.remem.livestream;
 
 import android.os.AsyncTask;
+import android.widget.TextView;
 
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -15,14 +18,18 @@ import java.util.Map;
 /**
  * Created by root on 11/27/14.
  */
-public class JsonComm extends AsyncTask<String, Map, Void> {
+
+
+public class JsonComm extends AsyncTask<String, Void, Void> {
     private String url;
     private Map params;
-
+    public SetUp.asyncComp completion;
 
     public JsonComm(String mUrl, Map mParams) {
         url = mUrl;
         params = mParams;
+        String killAppend = "false";
+
     }
 
     @Override
@@ -45,17 +52,23 @@ public class JsonComm extends AsyncTask<String, Map, Void> {
 
             StringEntity se = new StringEntity(jsonPOST.toString());
             httpPost.setEntity(se);
-            httpPost.setHeader("deviceType", "Android");
+            //httpPost.setHeader("deviceType", "Android");
             httpPost.setHeader("Content-type", "application/json");
 
             ResponseHandler responseHandler = new BasicResponseHandler();
             String response = (String) httpClient.execute(httpPost, responseHandler);
-            httpClient.execute(httpPost);
-            System.out.println(response);
+            System.out.println("My initial response is " + response);
+
+            if (response.equals("false") || response.equals("true")) {
+                System.out.println("Result in onPostComplete is " + response);
+                completion.onComplete(response);
+            }
+            //System.out.println("posted in try");
             //return response;
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("Error is" + e);
         }
         return null;
     }
+
 }

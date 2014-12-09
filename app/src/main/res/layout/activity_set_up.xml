@@ -38,36 +38,72 @@
                 android:layout_height="wrap_content"
                 android:hint="Enter URL"
                 android:id="@+id/urlValue"
+                android:text="http://contextualvideo-shunshou.rhcloud.com/"
                 />
 
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Enter Json Data"
-                android:id="@+id/jsonData"
-                />
+                android:hint="Hashtags"
+                android:id="@+id/hashTag"
+                android:text="#123456"/>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="RPi MAC Address"
+                android:id="@+id/macAddress"
+                android:text="01:02:03:04:05:06"/>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Youtube Id"
+                android:id="@+id/ytID"
+                android:text="123456"/>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="RTMP Url"
+                android:id="@+id/ytRTMP"
+                android:text="shunshou.yz1k-qkz0-d3e3-8t5s"/>
 
             </LinearLayout>
 
-
-
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="20dp"
+            android:layout_gravity="center_horizontal"
             android:text="Send Json Packet"
             android:onClick="sendJsonPacket"
-            android:id="@+id/jsonDataButton"/>
+            android:id="@+id/sendJsonPacketButton"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="20dp"
             android:text="Send Location"
             android:onClick="sendLocation"
             android:id="@+id/jsonLocationButton"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Start Stream"
+            android:onClick="androidSetupPost"
+            android:id="@+id/startStreamPost"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Kill Stream"
+            android:onClick="killStream"
+            android:id="@+id/killSTREAM"/>
+
+
 
         </LinearLayout>
 

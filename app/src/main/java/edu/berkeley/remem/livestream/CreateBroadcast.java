@@ -1,7 +1,18 @@
 package edu.berkeley.remem.livestream;
 
+import android.content.Context;
+
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.*;
@@ -11,6 +22,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -18,20 +31,34 @@ import java.util.List;
  */
 public class CreateBroadcast {
 
-    private static YouTube youtube;
+    final HttpTransport transport = AndroidHttp.newCompatibleTransport();
+    final JsonFactory jsonFactory = new GsonFactory();
+    String BROADCAST_TITLE = "test-bcast";
+    GoogleAccountCredential googleCredential;
+    Collection<String> scopes = Arrays.asList("https://www.googleapis.com/auth/userinfo.profile",
+            "https://www.googleapis.com/auth/youtube", "https://www.googleapis.com/auth/youtube.upload",
+            "https://www.googleapis.com/auth/youtube.readonly", "https://www.googleapis.com/auth/youtubepartner",
+            "https://www.googleapis.com/auth/youtubepartner-channel-audit");
+    String scope =
+            "oauth2:https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtubepartner https://www.googleapis.com/auth/youtubepartner-channel-audit";
 
-    public static void start(InputStream iStream) {
-        List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube");
+
+
+    public UserRecoverableAuthIOException start(GoogleAccountCredential gCred) {
+
+        googleCredential = gCred;
+        System.out.println(googleCredential);
+
 
         try {
+            YouTube youtube = new YouTube.Builder(transport, jsonFactory, googleCredential)
+                    .setApplicationName("LiveStream").build();
 
-            Credential credential = Auth.authorize(scopes, "createbroadcast", iStream);
 
-            youtube = new YouTube.Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY, credential)
-                    .setApplicationName("remem-video-streaming").build();
+
 
             //ASK THE USER FOR THE TITLE
-            String title = getBroadcastTitle();
+            String title = BROADCAST_TITLE;
             System.out.println("You chose " + title + " for broadcast title.");
 
             LiveBroadcastSnippet broadcastSnippet = new LiveBroadcastSnippet();
@@ -39,19 +66,28 @@ public class CreateBroadcast {
             broadcastSnippet.setScheduledStartTime(new DateTime("2024-01-30T00:00:00.000Z"));
             broadcastSnippet.setScheduledEndTime(new DateTime("2024-01-31T00:00:00.000Z"));
 
+            LiveBroadcastContentDetails contentDetails = new LiveBroadcastContentDetails();
+            MonitorStreamInfo monitorStream = new MonitorStreamInfo();
+            monitorStream.setEnableMonitorStream(false);
+            contentDetails.setMonitorStream(monitorStream);
+
             LiveBroadcastStatus status = new LiveBroadcastStatus();
-            status.setPrivacyStatus("public");
+            status.setPrivacyStatus("unlisted");
 
             LiveBroadcast broadcast = new LiveBroadcast();
             broadcast.setKind("youtube#liveBroadcast");
             broadcast.setSnippet(broadcastSnippet);
             broadcast.setStatus(status);
+            broadcast.setContentDetails(contentDetails);
+
+
 
             // Construct and execute the API request to insert the broadcast.
             YouTube.LiveBroadcasts.Insert liveBroadcastInsert =
-                    youtube.liveBroadcasts().insert("snippet,status", broadcast);
-            LiveBroadcast returnedBroadcast = liveBroadcastInsert.execute();
+                    youtube.liveBroadcasts().insert("snippet,status,contentDetails", broadcast);
 
+            LiveBroadcast returnedBroadcast = liveBroadcastInsert.execute();
+            /*
             // Print information from the API response.
             System.out.println("\n================== Returned Broadcast ==================\n");
             System.out.println("  - Id: " + returnedBroadcast.getId());
@@ -109,8 +145,7 @@ public class CreateBroadcast {
             System.out.println(
                     "  - Bound Stream Id: " + returnedBroadcast.getContentDetails().getBoundStreamId());
 
-
-
+        */
         } catch (GoogleJsonResponseException e) {
             System.err.println("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
                     + e.getDetails().getMessage());
@@ -119,45 +154,12 @@ public class CreateBroadcast {
         } catch (IOException e) {
             System.err.println("IOException: " + e.getMessage());
             e.printStackTrace();
+
         } catch (Throwable t) {
             System.err.println("Throwable: " + t.getMessage());
             t.printStackTrace();
         }
-    }
 
-    /*
-         * Prompt the user to enter a title for a broadcast.
-         */
-    private static String getBroadcastTitle() throws IOException {
-
-        String title = "";
-
-        System.out.print("Please enter a broadcast title: ");
-        BufferedReader bReader = new BufferedReader(new InputStreamReader(System.in));
-        title = bReader.readLine();
-
-        if (title.length() < 1) {
-            // Use "New Broadcast" as the default title.
-            title = "New Broadcast";
-        }
-        return title;
-    }
-
-    /*
-     * Prompt the user to enter a title for a stream.
-     */
-    private static String getStreamTitle() throws IOException {
-
-        String title = "";
-
-        System.out.print("Please enter a stream title: ");
-        BufferedReader bReader = new BufferedReader(new InputStreamReader(System.in));
-        title = bReader.readLine();
-
-        if (title.length() < 1) {
-            // Use "New Stream" as the default title.
-            title = "New Stream";
-        }
-        return title;
+        return null;
     }
 }

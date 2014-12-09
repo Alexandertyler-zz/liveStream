@@ -29,6 +29,14 @@ dependencies {
     compile 'com.google.apis:google-api-services-doubleclicksearch:v2-rev37-1.19.0'
     compile 'com.google.oauth-client:google-oauth-client-java6:1.19.0'
     compile 'com.google.oauth-client:google-oauth-client-jetty:1.19.0'
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.google.api-client:google-api-client-gson:+'
+    compile 'com.google.api-client:google-api-client-android:+'
+    compile 'com.google.apis:google-api-services-tasks:v1-rev41-1.19.0'
+    compile 'com.google.android.gms:play-services:+'
+
+
+
 }
 
 

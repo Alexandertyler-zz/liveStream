@@ -84,16 +84,25 @@
     <orderEntry type="library" exported="" name="google-oauth-client-1.19.0" level="project" />
     <orderEntry type="library" exported="" name="jetty-util-6.1.26" level="project" />
     <orderEntry type="library" exported="" name="jsr305-1.3.9" level="project" />
+    <orderEntry type="library" exported="" name="gson-2.2.4" level="project" />
     <orderEntry type="library" exported="" name="jackson-core-2.1.3" level="project" />
     <orderEntry type="library" exported="" name="google-api-client-1.19.0" level="project" />
+    <orderEntry type="library" exported="" name="google-api-services-tasks-v1-rev41-1.19.0" level="project" />
+    <orderEntry type="library" exported="" name="google-api-client-gson-1.19.0" level="project" />
+    <orderEntry type="library" exported="" name="google-http-client-gson-1.19.0" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-20.0.0" level="project" />
+    <orderEntry type="library" exported="" name="google-api-client-android-1.19.0" level="project" />
     <orderEntry type="library" exported="" name="servlet-api-2.5-20081211" level="project" />
     <orderEntry type="library" exported="" name="google-http-client-1.19.0" level="project" />
     <orderEntry type="library" exported="" name="jetty-6.1.26" level="project" />
+    <orderEntry type="library" exported="" name="google-http-client-android-1.19.0" level="project" />
     <orderEntry type="library" exported="" name="google-http-client-jackson2-1.19.0" level="project" />
     <orderEntry type="library" exported="" name="guava-jdk5-13.0" level="project" />
     <orderEntry type="library" exported="" name="google-oauth-client-java6-1.19.0" level="project" />
     <orderEntry type="library" exported="" name="google-oauth-client-jetty-1.19.0" level="project" />
     <orderEntry type="library" exported="" name="google-api-services-youtube-v3-rev122-1.19.0" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-20.0.0" level="project" />
+    <orderEntry type="library" exported="" name="play-services-6.1.71" level="project" />
     <orderEntry type="library" exported="" name="google-api-services-doubleclicksearch-v2-rev37-1.19.0" level="project" />
     <orderEntry type="library" exported="" name="google-api-services-oauth2-v2-rev82-1.19.0" level="project" />
   </component>
