@@ -231,52 +231,66 @@ public class SetUp extends Activity {
 
         jsonComm = new JsonComm(setupURL, jsonMap);
 
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                while (SetUp.killAppend.equals("false")) {
+                    try {
+                        Thread.sleep(5000); // Waits for 1 second (1000 milliseconds)
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                    androidAppendPost(); // make updateAuto() return a string
+                }
+            }
+        };
+
+
         try {
             jsonComm.execute();
-            androidAppendPost();
-            SystemClock.sleep(5000);
+            Thread myThread = new Thread(myRunnable);
+            myThread.start();
         } catch (Exception e) {
             System.out.println(e);
         }
 
+        System.out.println("End of Setup Post");
+
     }
 
-    public void killStream() {
+    public void killStream(View view) {
         killAppend = "true";
     }
 
     public void androidAppendPost() {
-        while (killAppend.equals("false")) {
-            System.out.println("killAppend = " + killAppend);
-            System.out.println("long/lat = " + String.valueOf(longitude) + "/" + String.valueOf(latitude));
+        System.out.println("killAppend = " + killAppend);
+        System.out.println("long/lat = " + String.valueOf(longitude) + "/" + String.valueOf(latitude));
 
-            EditText ytId = (EditText) findViewById(R.id.ytID);
+        EditText ytId = (EditText) findViewById(R.id.ytID);
 
-            Map<String, String> jsonMap = new HashMap<String, String>();
-            jsonMap.put("longitude", String.valueOf(longitude));
-            jsonMap.put("latitude", String.valueOf(latitude));
-            jsonMap.put("ytid", ytId.getText().toString());
+        Map<String, String> jsonMap = new HashMap<String, String>();
+        jsonMap.put("longitude", String.valueOf(longitude));
+        jsonMap.put("latitude", String.valueOf(latitude));
+        jsonMap.put("ytid", ytId.getText().toString());
 
-            String appendURL = BASE_SERVER_URL + "android_append_2";
+        String appendURL = BASE_SERVER_URL + "android_append_2";
 
-            jsonComm = new JsonComm(appendURL, jsonMap);
+        jsonComm = new JsonComm(appendURL, jsonMap);
 
-            jsonComm.completion = new asyncComp() {
-                @Override
-                public void onComplete(String result) {
-                    System.out.println("completion abstract is receiving " + result);
-                    killAppend = result;
-                }
-            };
-
-            try {
-                jsonComm.execute();
-            } catch (Exception e) {
-                System.out.println(e);
+        jsonComm.completion = new asyncComp() {
+            @Override
+            public void onComplete(String result) {
+                System.out.println("completion abstract is receiving " + result);
+                SetUp.killAppend = result;
             }
-            SystemClock.sleep(5000);
-            System.out.println("After sleep, should have appended.");
+        };
+
+        try {
+            jsonComm.execute();
+        } catch (Exception e) {
+            System.out.println(e);
         }
+
     }
 
 
@@ -288,6 +302,8 @@ public class SetUp extends Activity {
         System.out.println("Received data from EditText fields:");
         System.out.println(url.getText().toString());
         System.out.println(ytId.getText().toString());
+        System.out.println(String.valueOf(longitude));
+        System.out.println(String.valueOf(latitude));
 
         Map<String, String> jsonMap = new HashMap<String, String>();
 
